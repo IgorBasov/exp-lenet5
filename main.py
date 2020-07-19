@@ -6,8 +6,8 @@ Custom datasets, dataloaders and transforms: https://pytorch.org/tutorials/begin
 import torch
 
 from lenet5 import LeNet5
-from lenet5trainer import LeNet5Trainer
-from nettest import NetTest
+from lenet5_trainer import LeNet5Trainer
+from net_test import NetTest
 from utils import prepare_mnist_data
 
 # Net hyper parameters
