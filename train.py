@@ -9,6 +9,7 @@ from torchvision import transforms, utils
 from torch.utils.data import DataLoader
 
 from lenet5 import LeNet5
+from lenet5trainer import LeNet5Trainer
 
 # Hyper parameters
 NUM_EPOCHS = 15
@@ -40,8 +41,9 @@ test_loader = DataLoader(
     dataset=test_dataset, batch_size=BATCH_SIZE, shuffle=False)
 
 net = LeNet5(NUM_CLASSES).to(DEVICE)
+trainer = LeNet5Trainer(net, DEVICE)
 
-net.training_loop(train_loader, LEARNING_RATE, NUM_EPOCHS, DEVICE)
+trainer.train(train_loader, LEARNING_RATE, NUM_EPOCHS, print_every=100)
 
 # Test the model
 net.eval()
