@@ -4,12 +4,10 @@ Custom datasets, dataloaders and transforms: https://pytorch.org/tutorials/begin
 """
 
 import torch
-import torchvision
-from torchvision import transforms, utils
-from torch.utils.data import DataLoader
 
 from lenet5 import LeNet5
 from lenet5trainer import LeNet5Trainer
+from utils import prepare_mnist_data
 
 # Hyper parameters
 NUM_EPOCHS = 15
@@ -21,29 +19,14 @@ DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 DATA_PATH = '/home/aspirant/projects/torch/lenet/data/datasets/MNISTData'
 MODEL_STORE_PATH = '/home/aspirant/projects/torch/lenet/data/models'
 
-# Transforms to apply to the data
-trans = transforms.Compose([
-    transforms.Resize((32, 32)),
-    transforms.ToTensor(),
-    transforms.Normalize((0.1307,), (0.3081,))
-])
-
-# MNIST dataset
-train_dataset = torchvision.datasets.MNIST(
-    root=DATA_PATH, train=True, transform=trans, download=True)
-test_dataset = torchvision.datasets.MNIST(
-    root=DATA_PATH, train=False, transform=trans)
-
-# Create Dataloaders
-train_loader = DataLoader(dataset=train_dataset,
-                          batch_size=BATCH_SIZE, shuffle=True)
-test_loader = DataLoader(
-    dataset=test_dataset, batch_size=BATCH_SIZE, shuffle=False)
-
 net = LeNet5(NUM_CLASSES).to(DEVICE)
 trainer = LeNet5Trainer(net, DEVICE)
 
-trainer.train(train_loader, LEARNING_RATE, NUM_EPOCHS, print_every=100)
+train_loader, test_loader = prepare_mnist_data(DATA_PATH, BATCH_SIZE)
+
+trainer\
+    .train(train_loader, LEARNING_RATE, NUM_EPOCHS, print_every=BATCH_SIZE)\
+    .save(MODEL_STORE_PATH)
 
 # Test the model
 net.eval()
@@ -62,6 +45,3 @@ with torch.no_grad():
 
     print('Test Accuracy of the model on the 10000 test images: {}'.format(
         (correct / total) * 100))
-
-
-net.save(MODEL_STORE_PATH)
