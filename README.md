@@ -6,7 +6,9 @@ Another attempt to implement Yann LeCun's [LeNet-5](http://yann.lecun.com/exdb/p
 
 1. Install *torch* and *torchvision* libs
 
-2. Run
+2. Configure experiment in `main.py` file. Do not forget to set proper values to DATA_PATH (absolute path to `data/datasets/` folder) and MODEL_STORE_PATH (absolute path to `data/models/` folder) variables!
+
+3. Run
 
 ```bash
 python main.py
