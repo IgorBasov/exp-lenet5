@@ -4,6 +4,7 @@ Custom datasets, dataloaders and transforms: https://pytorch.org/tutorials/begin
 """
 
 import torch
+from datetime import datetime
 
 from lenet5 import LeNet5
 from lenet5_trainer import LeNet5Trainer
@@ -17,11 +18,15 @@ BATCH_SIZE = 100
 LEARNING_RATE = 0.01
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-DATA_PATH = '/home/aspirant/projects/torch/lenet/data/datasets/MNISTData'
-MODEL_STORE_PATH = '/home/aspirant/projects/torch/lenet/data/models'
+print('Device is: {}'.format(DEVICE))
+
+DATA_PATH = '/home/igor/Projects/exp-lenet5/data/datasets/MNISTData'
+MODEL_STORE_PATH = '/home/igor/Projects/exp-lenet5/data/models'
 
 train_loader, test_loader = prepare_mnist_data(DATA_PATH, BATCH_SIZE)
 trainer = LeNet5Trainer(net=LeNet5(NUM_CLASSES).to(DEVICE), device=DEVICE)
+
+trainingStartedAt = datetime.now()
 
 net = trainer.train(
     train_data=train_loader,
@@ -29,6 +34,9 @@ net = trainer.train(
     num_epochs=NUM_EPOCHS,
     print_every=BATCH_SIZE
 )
+
+print('Training took {}'.format((datetime.now() - trainingStartedAt)))
+
 net_test = NetTest(net, DEVICE)
 
 correct, total = net_test.test(test_data=test_loader)
